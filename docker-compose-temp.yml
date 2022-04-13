@@ -1,5 +1,7 @@
 version: "3.4"
-
+# I wrote this file initally to work with postgress but due to
+# node module and time I choosed mysql as an Alternative.
+# Just to show the effort.
 services:
   postgresql_database:
     image: postgres:latest

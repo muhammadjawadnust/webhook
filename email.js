@@ -1,5 +1,7 @@
+require("dotenv").config();
+
 const mailchimp = require("@mailchimp/mailchimp_transactional")(
-  "0gHAoQQU1Mg6iOFidx0-hA"
+  process.env.MANDRIL_API_KEY
 );
 
 const message = {

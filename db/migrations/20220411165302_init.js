@@ -7,7 +7,6 @@ exports.up = async function (knex) {
     table.increments("id");
     table.string("event_type_know").notNullable();
     table.string("message_ID_event").notNullable();
-    // table.timestamps * (true, true);
   });
 };
 

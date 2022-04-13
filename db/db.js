@@ -1,6 +1,7 @@
 const knex = require("knex");
 const knexfile = require("./knexfile");
 
+//Please read below comments
 //TODO in prod, use dependency injection
 //to create knex instance so db can be mocked
 //for tests

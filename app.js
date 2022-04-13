@@ -75,10 +75,3 @@ app.post("/", (req, res) => {
 });
 
 module.exports.socket_conn = socket_conn;
-
-// app.get("/live", async (req, res) => {
-//   res.sendFile(__dirname + "/index.html");
-//   setTimeout((socket) => {
-//     console.log("io.emit is called");
-//   }, 3000);
-// });

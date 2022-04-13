@@ -14,6 +14,9 @@ connection.connect(function (err) {
       "error occured while connecting to DB: " + err.message
     );
   }
+  /*TODO
+   ** We should look for the dependency injectio too
+   */
   var sql = `INSERT INTO socketEvent2 (event_type_know, message_ID_event) VALUES ('jawad', 'testing');`;
   connection.query(sql, function (err, result) {
     if (err) throw err;

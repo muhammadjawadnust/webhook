@@ -14,6 +14,8 @@ Please do the following first before proceeding to start project
 
 ---
 
+# RUN npm i and then follow the steps
+
 # 1st Step:
 
 # Run the following command in the projects root directory
