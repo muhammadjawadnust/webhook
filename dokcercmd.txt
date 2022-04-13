@@ -1,0 +1,20 @@
+-docker run --name postgres-0 -e POSTGRES_PASSWORD=admin123 -d -p 5432:5432 postgres:alpine
+
+docker ps //to check if container is up
+
+docker exec -it postgres-0 bash //bash into the postgress container
+
+ls(to check the directory of linux container)
+
+psql _U postgres (accesss the postgress)
+
+\du //check the role of postgress user
+
+create database socket; (create a db into postgres)
+
+
+\l // to see the database
+
+//connect to database
+psql -h localhost -p 5432 -U  postgres
+
