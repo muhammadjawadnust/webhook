@@ -69,6 +69,7 @@ Please do the following first before proceeding to start project
 --> docker-compose.yml is the file for spining up the mysql datbase in the docker container.
 
 --> Socket library is used to setup the real-time communication with the database.
+<<<<<<< HEAD
 
 --> Service folder have our services
 
@@ -78,6 +79,12 @@ Please do the following first before proceeding to start project
 
 ---
 
+=======
+--> Service folder have our services
+--> connection folder have our connections
+--> Email.js is the file that we can use to send and email, but you have to use your API key for mandril account.
+--
+>>>>>>> 25eaaae718c4d1382ab7d0278ed0a99d4a74886d
 --> The events are real time, and in console of browser you can see events too. But again these consoles should not
 be pushed into PROD.
 
