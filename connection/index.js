@@ -1,11 +1,12 @@
 let mysql = require("mysql");
+require("dotenv").config();
 
 let connection = mysql.createConnection({
-  host: "127.0.0.1",
-  user: "admin",
-  password: "admin123",
-  database: "db",
-  port: 3030,
+  host: process.env.DB_HOST,
+  user: process.env.DB_USERNAME,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_DATABASE,
+  port: process.env.DB_PORT,
 });
 
 connection.connect(function (err) {
@@ -14,14 +15,6 @@ connection.connect(function (err) {
       "error occured while connecting to DB: " + err.message
     );
   }
-  /*TODO
-   ** We should look for the dependency injectio too
-   */
-  var sql = `INSERT INTO socketEvent2 (event_type_know, message_ID_event) VALUES ('jawad', 'testing');`;
-  connection.query(sql, function (err, result) {
-    if (err) throw err;
-    console.log("1 record inserted");
-  });
   console.log("Connected to the MySQL server.");
 });
 
@@ -31,10 +24,9 @@ const destroyConnection = () => {
       return console.log("error:" + err.message);
     }
     console.log("Close the database connection.");
-
     connection.destroy();
   });
 };
 
 // destroyConnection();
-module.exports = [connection, destroyConnection];
+module.exports = { connection, destroyConnection };
