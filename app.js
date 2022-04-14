@@ -32,42 +32,48 @@ const socket_conn = io.on("connection", (socket) => {
 
 //This endpoint must be of type POST as recomended by Mandril
 app.post("/", (req, res) => {
+  console.log("into the request");
   if (Object.keys(req.body).length === 0 && req.body.constructor === Object) {
     return res.json({
-      message: "empty ",
+      message: "send some events in body",
     });
+    console.log("No events in the body");
   } else {
     const response = JSON.parse(req.body.mandrill_events)
       ? JSON.parse(req.body.mandrill_events)
       : "";
-
+    console.log("checking repsonse length");
     if (response.length == 0) {
+      console.log(" repsonse length is less");
       return res.json({
         message: "empty event",
       });
     }
     for (let i = 0; i < response.length; i++) {
+      console.log("event loop");
+      // response
+      //   ? () => {
+      console.log("into the loop");
       const mandrilEvents = {
         eventType: response[i]?.event ? response[i].event : null,
-        messageId: response[i]?.msg._id ? response[i].msg._id : null,
-        msg_state: response[i]?.msg.state ? response[i].msg.state : null,
-        subject: response[i]?.msg.subject ? response[i].msg.subject : null,
-        email: response[i]?.msg.email ? response[i].msg.email : null,
+        messageId: response[i].msg._id ? response[i].msg._id : null,
+        msg_state: response[i].msg.state ? response[i].msg.state : null,
+        subject: response[i].msg.subject ? response[i].msg.subject : null,
+        email: response[i].msg.email ? response[i].msg.email : null,
       };
       EmitValue(socket_conn, mandrilEvents);
       insertEventIntoDb(mandrilEvents, connection);
     }
+    //     : () => {
+    //         console.log("some value may be empty");
+    //       };
+    // }
     res
       .json({
         message: "Events saved",
       })
       .status(200);
   }
-  res
-    .json({
-      message: "Webhook is triggerd",
-    })
-    .status(200);
 });
 
 app.get("/live", (req, res) => {
