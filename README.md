@@ -76,8 +76,6 @@ Please do the following first before proceeding to start project
 
 --> Email.js is the file that we can use to send and email, but you have to use your API key for mandril account.
 
----
-
 --> The events are real time, and in console of browser you can see events too. But again these consoles should not
 be pushed into PROD.
 
