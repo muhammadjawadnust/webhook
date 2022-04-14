@@ -1,9 +1,8 @@
 //Services
 function EmitValue(socket_conn, mandrilEvents) {
-  console.log("socket_conn is", socket_conn);
-  const { eventType, messageId } = mandrilEvents;
-  setTimeout(() => {
-    socket_conn.emit("Event", eventType);
-  });
+  const { eventType, messageId, msg_state, subject, email } = mandrilEvents;
+
+  socket_conn.emit("Event", eventType);
+  socket_conn.emit("Event", msg_state);
 }
 module.exports.EmitValue = EmitValue;

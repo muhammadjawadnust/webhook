@@ -1,18 +1,40 @@
 <html>
     <head>
-
+        <style> 
+            textarea {
+                position: absolute;
+                transform: translate(0, -50%);
+            top: 30%;
+            left: 15%;
+              width: 70%;
+              height: 150px;
+              padding: 12px 20px;
+              box-sizing: border-box;
+              border: 2px solid #ccc;
+              border-radius: 4px;
+              background-color: #f8f8f8;
+              font-size: 16px;
+              resize: none;
+            }
+            .center{
+                position: absolute;
+                transform: translate(0, -50%);
+            top: 15%;
+            left: 15%;
+            }
+            </style>
     <script src="/socket.io/socket.io.js"></script>
     <script>
-        const socket = io();
+        const socket = io(("http://localhost:5001"));
       </script>
     </head>
     <body>
-       
+                <h2 class="center">Realtime events </h2>
           <textarea name="" type="text" id="result" >
 
           </textarea>
-          <input type="text" onchange="ws.send(this.value);">
-          <button id="click">click</button>
+          <!-- <input type="text" onchange="ws.send(this.value);">
+          <button id="click">click</button> -->
           </body>
           <script>
              // var ws =new WebSocket('ws://localhost:3000');

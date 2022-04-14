@@ -2,20 +2,17 @@ var express = require("express");
 require("dotenv").config();
 const knexConfig = require("./db/knexfile");
 const knex = require("knex")(knexConfig[process.env.NODE_ENV]);
-// const { WebSocketServer } = require("ws");
+const PORT = process.env.PORT || 5001;
 
-const { connection } = require("./connection/index");
+const { connection, destroyConnection } = require("./connection/index.js");
 
 var app = express();
 const bodyParser = require("body-parser");
 const { EmitValue } = require("./service/socket.js");
+const { insertEventIntoDb } = require("./service/addToDb.js");
 
-console.log("process.env.NODE_ENV  is ", process.env.NODE_ENV);
-console.log("wah wah", process.env);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
-const PORT = process.env.PORT || 5001;
 
 const server = app.listen(PORT, (err) => {
   if (err) {
@@ -26,26 +23,6 @@ const server = app.listen(PORT, (err) => {
 
 const io = require("socket.io")(server);
 
-/*Connecting to Mysql
- ** for CURD Operations
- */
-const insertEventIntoDb = (mandrilEvents) => {
-  const { eventType, messageId } = mandrilEvents;
-};
-connection.connect(function (err) {
-  if (err) {
-    return console.error(
-      "error occured while connecting to DB: " + err.message
-    );
-  }
-  var sql = `INSERT INTO socketEvent (event_type, message_Id) VALUES ('${eventType}', '${messageId}');`;
-  con.query(sql, function (err, result) {
-    if (err) throw err;
-    console.log("1 record inserted");
-  });
-  console.log("Connected to the MySQL server.");
-});
-
 const socket_conn = io.on("connection", (socket) => {
   socket.emit("message", "Waiting for triggers to get triggered");
   console.log(socket.id);
@@ -53,25 +30,47 @@ const socket_conn = io.on("connection", (socket) => {
   module.exports.socket = socket;
 });
 
-// module.exports.iio = io;
-
 //This endpoint must be of type POST as recomended by Mandril
 app.post("/", (req, res) => {
-  console.log("PUBLIC URL HAS BEEN HIT");
-  res.sendFile(__dirname + "/index.html");
-  const response = JSON.parse(req.body.mandrill_events);
+  if (Object.keys(req.body).length === 0 && req.body.constructor === Object) {
+    return res.json({
+      message: "empty ",
+    });
+  } else {
+    const response = JSON.parse(req.body.mandrill_events)
+      ? JSON.parse(req.body.mandrill_events)
+      : "";
 
-  const mandrilEvents = {
-    eventType: response[0].event ? response[0].event : null,
-    messageId: response[0].msg._id ? response[0].msg._id : null,
-  };
-  console.log("PUBLIC URL type is ", response[0].event);
-  console.log("PUBLIC URL type is ", response[0].msg._id);
-  EmitValue(socket_conn, mandrilEvents);
-  insertEventIntoDb(mandrilEvents);
-  res.json({
-    message: true,
-  });
+    if (response.length == 0) {
+      return res.json({
+        message: "empty event",
+      });
+    }
+    for (let i = 0; i < response.length; i++) {
+      const mandrilEvents = {
+        eventType: response[i]?.event ? response[i].event : null,
+        messageId: response[i]?.msg._id ? response[i].msg._id : null,
+        msg_state: response[i]?.msg.state ? response[i].msg.state : null,
+        subject: response[i]?.msg.subject ? response[i].msg.subject : null,
+        email: response[i]?.msg.email ? response[i].msg.email : null,
+      };
+      EmitValue(socket_conn, mandrilEvents);
+      insertEventIntoDb(mandrilEvents, connection);
+    }
+    res
+      .json({
+        message: "Events saved",
+      })
+      .status(200);
+  }
+  res
+    .json({
+      message: "Webhook is triggerd",
+    })
+    .status(200);
 });
 
+app.get("/live", (req, res) => {
+  res.sendFile(__dirname + "/index.html");
+});
 module.exports.socket_conn = socket_conn;
